@@ -1,0 +1,24 @@
+{
+  "name": "dontfall-api",
+  "version": "1.0.0",
+  "description": "API for Don't Fall online multiplayer!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArthurBOliveira/DontFall-API.git"
+  },
+  "author": "Arthur B de Oliveira",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ArthurBOliveira/DontFall-API/issues"
+  },
+  "homepage": "https://github.com/ArthurBOliveira/DontFall-API#readme",
+  "dependencies": {
+    "express": "^4.15.5",
+    "path": "^0.12.7",
+    "socket.io": "^2.0.3"
+  }
+}
