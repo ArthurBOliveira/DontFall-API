@@ -17,8 +17,8 @@ describe('generateMessage', () => {
 describe('generateLocationMessage', () => {
     it('should generate correct location message object', () => {
         const from = 'Zé';
-        const latitude = 'Super Hue';
-        const longitude = 'Super Hue';
+        const latitude = '123';
+        const longitude = '321';
 
         const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
