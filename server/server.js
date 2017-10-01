@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
 
         io.emit('newMessage', generateMessage(message.from, message.text));
 
-        callback('Se liga mané!');
+        callback('');
     });
 
     socket.on('createLocationMessage', (location) => {

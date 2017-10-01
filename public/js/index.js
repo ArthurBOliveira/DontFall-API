@@ -29,24 +29,31 @@ socket.on('newLocationMessage', function (message) {
 $('#message-form').on('submit', function (e) {
     e.preventDefault();
 
+    let msgTxt = $('[name=message]');
+
     socket.emit('createMessage', {
         from: 'User',
-        text: $('[name=message]').val()
+        text: msgTxt.val()
     }, function (msg) {
-        console.log('Peguei: ', msg);
-    });
+        msgTxt.val('');
+    });    
 });
 
-var locationButton = $('#sendLocation');
+var locationButton = $('#send-location');
 locationButton.on('click', function () {
     if (!navigator.geolocation) return alert('No geolocation!');
+
+    locationButton.attr('disabled', 'disabled').text('Sending...');
 
     navigator.geolocation.getCurrentPosition(function (position) {
         socket.emit('createLocationMessage', {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
         });
+
+        locationButton.removeAttr('disabled').text('Sending location');
     }, function (position) {
+        locationButton.removeAttr('disabled').text('Sending location');
         return alert('Unable to fetch location!');
     });
 });
