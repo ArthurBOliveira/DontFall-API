@@ -20,6 +20,7 @@ io.on('connection', (socket) => {
 
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User!'));
 
+    //Messages Chat
     socket.on('createMessage', (message, callback) => {
         console.log('createMessage', message);
 
@@ -28,10 +29,17 @@ io.on('connection', (socket) => {
         callback('');
     });
 
+    //Location Chat
     socket.on('createLocationMessage', (location) => {
         console.log('Location: ', location);
         io.emit('newLocationMessage', generateLocationMessage('Admin', location.latitude, location.longitude));
     });
+
+    //Update Players Position
+    socket.on('updatePosition', (position) => {
+        console.log('position', position);
+        io.emit('moveFromServer', position)
+    })
 
     socket.on('disconnect', () => {
         console.log('user disconnected');
