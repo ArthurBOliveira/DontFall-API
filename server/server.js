@@ -14,10 +14,10 @@ let io = socketIO(server);
 app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
-    console.log('new user connect');
 
+    //#region Messages
     socket.emit('newMessage', generateMessage('Admin', 'Welcome!'));
-
+    
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User!'));
 
     //Messages Chat
@@ -34,12 +34,19 @@ io.on('connection', (socket) => {
         console.log('Location: ', location);
         io.emit('newLocationMessage', generateLocationMessage('Admin', location.latitude, location.longitude));
     });
+    //#endregion
 
+    //#region GamePlayer
     //Update Players Position
     socket.on('updatePosition', (position) => {
-        console.log('position', position);
         io.emit('moveFromServer', position)
+    });
+
+    //NewPlayer
+    socket.on('newPlayer', (position) => {
+        io.emit('newPlayerServer', position)
     })
+    //#endregion
 
     socket.on('disconnect', () => {
         console.log('user disconnected');
