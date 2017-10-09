@@ -39,12 +39,14 @@ io.on('connection', (socket) => {
     //#region GamePlayer
     //Update Players Position
     socket.on('updatePosition', (position) => {
+        console.log(position);
         io.emit('moveFromServer', position)
     });
 
     //NewPlayer
-    socket.on('newPlayer', (position) => {
-        io.emit('newPlayerServer', position)
+    socket.on('newPlayer', (_player) => {
+        console.log(_player);
+        socket.broadcast.emit('newPlayerServer', _player)
     })
     //#endregion
 
