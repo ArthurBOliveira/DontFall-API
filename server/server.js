@@ -48,6 +48,12 @@ io.on('connection', (socket) => {
         console.log(_player);
         io.emit('newPlayerServer', _player)
     })
+
+    //Player Actions
+    socket.on('playerAction', (action) => {
+        //{'name' : 'Player', 'action' : 'Fire'}
+        io.emit('playerActionServer');
+    });
     //#endregion
 
     socket.on('disconnect', () => {
