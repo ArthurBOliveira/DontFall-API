@@ -46,13 +46,13 @@ io.on('connection', (socket) => {
     //NewPlayer
     socket.on('newPlayer', (_player) => {
         console.log(_player);
-        io.emit('newPlayerServer', _player)
+        socket.broadcast.emit('newPlayerServer', _player)
     })
 
     //Player Actions
     socket.on('playerAction', (action) => {
         //{'name' : 'Player', 'action' : 'Fire'}
-        io.emit('playerActionServer');
+        io.emit('playerActionServer', action);
     });
     //#endregion
 
