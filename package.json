@@ -20,6 +20,7 @@
   "homepage": "https://github.com/ArthurBOliveira/DontFall-API#readme",
   "dependencies": {
     "express": "^4.15.5",
+    "moment": "^2.19.1",
     "path": "^0.12.7",
     "socket.io": "^2.0.3"
   },
