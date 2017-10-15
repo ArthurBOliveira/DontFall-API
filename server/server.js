@@ -52,7 +52,7 @@ io.on('connection', (socket) => {
         var player = players.removePlayer(socket.id);
 
         if (player) {
-            io.to(player.room).emit('updatePlayerList', players.getPlayerList(player.room));
+            io.to(player.room).emit('removePlayer', player.name);
         }
     });
 });
