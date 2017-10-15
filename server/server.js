@@ -4,90 +4,55 @@ const express = require('express');
 const socketIO = require('socket.io');
 
 const {
-    generateMessage,
-    generateLocationMessage
-} = require('./utils/message');
-const {
     isRealString
 } = require('./utils/validation');
 const {
-    Users
-} = require('./utils/users');
+    Players
+} = require('./utils/players');
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
 
 let app = express();
 let server = http.createServer(app);
 let io = socketIO(server);
-let users = new Users();
+let players = new Players();
 
 app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
-
-    //#region Messages
     socket.on('join', (params, callback) => {
-        if (!isRealString(params.name) || !isRealString(params.room)) {
-            return callback('Name and room name are required.');
-        }
+        console.log(params);
+        if (!isRealString(params.name) || !isRealString(params.room)) return callback('');
 
         socket.join(params.room);
-        users.removeUser(socket.id);
-        users.addUser(socket.id, params.name, params.room);
+        players.removePlayer(socket.id);
+        players.addPlayer(socket.id, params.name, params.room);
 
-        io.to(params.room).emit('updateUserList', users.getUserList(params.room));
-        socket.emit('newMessage', generateMessage('Admin', 'Welcome!'));
-        socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} joined the room`));
-        callback();
+        // io.to(params.room).emit('currentPlayers', players.getUserList(params.room));
+        // socket.to(params.room).emit('currentPlayers', players.getPlayerList(params.room));
+        socket.broadcast.to(params.room).emit('newPlayerServer', params);
+
+        callback(players.getPlayerList(params.name, params.room));
     });
 
-    //Messages Chat
-    socket.on('createMessage', (message, callback) => {
-        var user = users.getUser(socket.id);
-
-        if (user && isRealString(message.text)) {
-            io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
-        }
-
-        callback('');
-    });
-
-    //Location Chat
-    socket.on('createLocationMessage', (location) => {
-        var user = users.getUser(socket.id);
-
-        if (user) {
-            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, location.latitude, location.longitude));
-        }
-    });
-    //#endregion
-
-    //#region GamePlayer
     //Update Players Position
     socket.on('updatePosition', (position) => {
-        console.log(position);
-        io.emit('moveFromServer', position)
+        // console.log(position);
+        io.to(position.room).emit('moveFromServer', position)
     });
-
-    //NewPlayer
-    socket.on('newPlayer', (_player) => {
-        console.log(_player);
-        socket.broadcast.emit('newPlayerServer', _player)
-    })
 
     //Player Actions
     socket.on('playerAction', (action) => {
         //{'name' : 'Player', 'action' : 'Fire'}
-        io.emit('playerActionServer', action);
+        io.to(action.room).emit('playerActionServer', action);
     });
     //#endregion
 
     socket.on('disconnect', () => {
-        var user = users.removeUser(socket.id);
+        var player = players.removePlayer(socket.id);
 
-        if (user) {
-            io.to(user.room).emit('updateUserList', users.getUserList(user.room));
-            io.to(user.room).emit('newMessage', generateMessage('Admin', user.name + ' has left the room.'));
+        if (player) {
+            io.to(player.room).emit('updatePlayerList', players.getPlayerList(player.room));
         }
     });
 });
