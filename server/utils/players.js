@@ -3,11 +3,12 @@ class Players {
         this.players = [];
     }
 
-    addPlayer(id, name, room) {
+    addPlayer(id, name, room, score) {
         let player = {
             id,
             name,
-            room
+            room,
+            score
         };
         this.players.push(player);
         return player;
@@ -34,6 +35,17 @@ class Players {
         // console.log(namesArray);
 
         return namesArray;
+    }
+
+    updatePlayerScore(id, score) {
+        var player = getPlayer(id);
+
+        if(player){
+            player.score = score;
+
+            removePlayer(id);
+            addPlayer(player);
+        }
     }
 }
 
